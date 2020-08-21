@@ -113,7 +113,7 @@ def parse_wheel_requirements_entry(
 def parse_package_requirements_entry(
     source: RequirementsEntrySource, line: str
 ) -> RequirementsPackageEntry:
-    operators = ["==", ">=", ">", "<=", "<"]
+    operators = ["==", ">=", ">", "<=", "<", '~=']
     for operator in operators:
         parts = line.split(operator)
         if len(parts) == 1:
@@ -123,9 +123,12 @@ def parse_package_requirements_entry(
             source=source, name=parts[0], operator=operator, version=parts[1]
         )
 
-    raise RequirementsEntryParseError(
-        f"cannot parse '{line}' in {source.path}:{source.line_number}"
-    )
+    ## return line that's not fixed
+    return line
+
+    # raise RequirementsEntryParseError(
+    #     f"cannot parse '{line}' in {source.path}:{source.line_number}"
+    # )
 
 
 def _clean_line(line: str) -> str:
